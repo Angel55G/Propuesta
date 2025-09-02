@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>TE AMO MI AMOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin: 0; padding: 0;
+  height: 100%;
+  background: #f8c8dc;
+  display: flex; justify-content: center; align-items: center;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+#sobre, #hoja { transition: all 1s ease; }
+
+#sobre {
+  width: 320px; height: 200px;
+  background: linear-gradient(145deg, #ffe699, #ffd966);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 3;
+  display: flex; justify-content: center; align-items: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.5em;
+}
+
+#hoja {
+  width: 320px; height: 450px;
+  background-image: url('miCarta.jpg'); /* Tu imagen de carta */
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotateX(-90deg);
+  padding: 25px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+  color: #333;
+  text-align: center;
+}
+
+#textoConfesion h2 { font-family: 'Great Vibes', cursive; text-align:center; color:#d1006c; }
+#textoConfesion p { font-size:1.1em; text-align:center; color:#333; line-height:1.5em; }
+
+.tira { margin-top: 20px; padding:10px 15px; background:#ffe4f1; color:#d1006c; border-radius:8px; cursor:pointer; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+
+#pregunta { display:none; text-align:center; margin-top:20px; }
+.opciones { display:flex; gap:20px; margin-bottom:20px; justify-content:center; }
+.opcion { width:80px;height:80px;border:2px dashed hotpink; border-radius:12px; position:relative; cursor:crosshair; background:#fff4f9; }
+.opcion p { position:absolute; width:100%; text-align:center; top:35%; font-weight:bold; color:hotpink; pointer-events:none; font-size:1em; }
+
+#mensajeFinal {
+  display:none;
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-family: 'Great Vibes', cursive;
+  font-size:3em;
+  color:#d1006c;
+  text-align:center;
+  z-index:999;
+}
+
+.corazon {
+  position:absolute; width:20px; height:20px;
+  background:#ff69b4;
+  transform:rotate(45deg);
+  border-radius:3px;
+  opacity:0.8;
+}
+.corazon:before, .corazon:after {
+  content:""; position:absolute; width:20px; height:20px;
+  background:hotpink; border-radius:50%;
+}
+.corazon:before { top:-10px; left:0; }
+.corazon:after { left:-10px; top:0; }
+
+.estrella {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#videoGatos { display:none; position:absolute; bottom:20px; width:300px; height:200px; border-radius:12px; overflow:hidden; z-index:1000; }
+#videoGatos video { width:100%; height:100%; object-fit:contain; }
+
+</style>
+</head>
+<body>
+
+<audio id="musicaCarta" src="musica.mp3"></audio>
+
+<div id="sobre">💌 Haz clic para abrir</div>
+
+<div id="hoja">
+  <div id="textoConfesion">
+    <h2>Para mi amor ❤️</h2>
+    <p>
+      Desde que llegaste a mi vida, todo es más bonito y mágico. Cada día contigo es un regalo, cada sonrisa tuya ilumina mi mundo.<br><br>
+      Quiero que sepas que siempre te voy a cuidar, apoyarte y hacerte feliz. Eres lo más importante para mí y no puedo imaginar mi vida sin ti.
+    </p>
+  </div>
+  <div class="tira" id="tira">Haz clic aquí para la sorpresa 🎀</div>
+
+  <div id="pregunta">
+    <h2>¿Quieres ser mi novia? 💕</h2>
+    <div class="opciones">
+      <div class="opcion" id="si"><p>Sí</p></div>
+      <div class="opcion" id="no"><p>No</p></div>
+    </div>
+  </div>
+</div>
+
+<div id="mensajeFinal"></div>
+<div id="videoGatos">
+  <img src="gatito.gif" style="position:absolute; bottom:20px; width:300px; height:200px;">
+</div>
+
+<script>
+const sobre = document.getElementById('sobre');
+const hoja = document.getElementById('hoja');
+const tira = document.getElementById('tira');
+const pregunta = document.getElementById('pregunta');
+const mensajeFinal = document.getElementById('mensajeFinal');
+const videoGatos = document.getElementById('videoGatos');
+const musicaCarta = document.getElementById('musicaCarta');
+
+sobre.addEventListener('click', ()=>{
+  sobre.style.opacity='0';
+  musicaCarta.play();
+  setTimeout(()=>{ sobre.style.display='none'; hoja.style.transform='translate(-50%, -50%) rotateX(0deg)'; },800);
+});
+
+tira.addEventListener('click', ()=>{
+  tira.style.display='none';
+  pregunta.style.display='block';
+});
+
+function dibujar(opcion){
+  let dibujando=false;
+  let lastX,lastY;
+  const ctx=document.createElement('canvas');
+  ctx.width=opcion.offsetWidth; ctx.height=opcion.offsetHeight;
+  ctx.style.position="absolute"; ctx.style.top="0"; ctx.style.left="0";
+  opcion.appendChild(ctx);
+  const c=ctx.getContext('2d');
+  c.strokeStyle="hotpink"; c.lineWidth=3;
+
+  opcion.addEventListener('mousedown', e=>{ dibujando=true; [lastX,lastY]=[e.offsetX,e.offsetY]; });
+  opcion.addEventListener('mouseup', e=>{ dibujando=false; mostrarFinal(opcion.id); });
+  opcion.addEventListener('mousemove', e=>{ if(!dibujando) return; c.beginPath(); c.moveTo(lastX,lastY); c.lineTo(e.offsetX,e.offsetY); c.stroke(); [lastX,lastY]=[e.offsetX,e.offsetY]; });
+}
+
+function mostrarFinal(respuesta){
+  hoja.style.display='none';
+  pregunta.style.display='none';
+  if(respuesta==='si'){
+    mensajeFinal.innerHTML='¡Me haces el hombre más feliz del mundo 💖';
+    mensajeFinal.style.display='block';
+    videoGatos.style.display='block';
+    setInterval(soltarCorazonesLluvia, 300);
+    setInterval(soltarEstrellasNeon, 500);
+  } else {
+    mensajeFinal.innerHTML='Está bien 😢, igual siempre te voy a querer.';
+    mensajeFinal.style.display='block';
+  }
+}
+
+function soltarCorazonesLluvia(){
+  let c=document.createElement('div');
+  c.className='corazon';
+  let size=15+Math.random()*25;
+  c.style.width=size+'px';
+  c.style.height=size+'px';
+  c.style.left=Math.random()*window.innerWidth+'px';
+  c.style.top='-50px';
+  c.style.opacity=Math.random()*0.9+0.1;
+  c.style.zIndex=Math.floor(Math.random()*100);
+  document.body.appendChild(c);
+  let duracion=3+Math.random()*3;
+  c.animate([{transform:'translateY(0px)'},{transform:'translateY('+ (window.innerHeight+100)+'px)'}],{duration:duracion*1000,iterations:1});
+  setTimeout(()=>c.remove(),duracion*1000);
+}
+
+function soltarEstrellasNeon() {
+  let star = document.createElement('div');
+  star.className = 'estrella';
+  let size = 5 + Math.random() * 10;
+  star.style.width = size + 'px';
+  star.style.height = size + 'px';
+  star.style.left = Math.random() * window.innerWidth + 'px';
+  star.style.top = Math.random() * window.innerHeight + 'px';
+  let colores = ['#ff00ff','#00ffff','#ff1493','#8a2be2'];
+  star.style.background = colores[Math.floor(Math.random()*colores.length)];
+  star.style.boxShadow = `0 0 10px ${star.style.background}, 0 0 20px ${star.style.background}`;
+  star.style.opacity = Math.random() * 0.8 + 0.2;
+  document.body.appendChild(star);
+
+  let dur = 1000 + Math.random()*2000;
+  star.animate([
+    {opacity: star.style.opacity, transform: 'scale(1)'},
+    {opacity: 0.1, transform: 'scale(0.5)'},
+    {opacity: star.style.opacity, transform: 'scale(1)'}
+  ], {duration: dur, iterations: Infinity});
+}
+
+dibujar(document.getElementById('si'));
+dibujar(document.getElementById('no'));
+</script>
+
+</body>
+</html>

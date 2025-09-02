@@ -1,0 +1,43 @@
+#hoja {
+  width: 320px; 
+  height: 450px;
+  background-image: url('miCarta.jpg'); /* tu imagen aquí */
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotateX(-90deg);
+  padding: 25px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+  color: #333;
+  text-align: center;
+}
+
+#videoGatos {
+  display: none;
+  position: fixed; /* mejor fixed para que quede encima de todo */
+  bottom: 20px;
+  right: 20px;
+  width: 400px; /* puedes ajustar */
+  height: 300px; /* puedes ajustar */
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+#videoGatos video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* muestra todo el gatito */
+}
+
+.estrella {
+  pointer-events: none;
+}
+
